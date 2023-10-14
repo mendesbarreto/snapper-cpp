@@ -29,8 +29,6 @@ int main_old() {
   return 0;
 }
 
-void do_nothing(int, void *) {}
-
 int main() {
   cv::VideoCapture cap(0);
 
