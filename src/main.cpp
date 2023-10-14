@@ -5,7 +5,6 @@
 
 int main() {
   std::cout << "Let's Start Snapper Example" << std::endl;
-
   std::cout << "Loading example" << std::endl;
   cv::Mat image = cv::imread("../assets/rick.jpg", cv::IMREAD_COLOR);
 
