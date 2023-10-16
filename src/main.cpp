@@ -35,7 +35,6 @@ int main() {
   cv::Mat frame = cv::imread("../assets/tray_portrait.jpg");
   cv::Mat output_frame = frame.clone();
 
-  cv::namedWindow("snapper-trackbar");
   int l_h = 155, l_s = 99, l_v = 0;
   int u_h = 179, u_s = 255, u_v = 255;
 
