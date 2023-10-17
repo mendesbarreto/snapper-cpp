@@ -1,5 +1,7 @@
 #include <iostream>
+#include <opencv2/core/types.hpp>
 #include <opencv2/highgui/highgui.hpp>
+#include <opencv2/imgproc.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/opencv.hpp>
 
@@ -32,7 +34,7 @@ int main_old() {
 int main() {
   cv::VideoCapture cap(0);
 
-  cv::Mat frame = cv::imread("../assets/tray_portrait.jpg");
+  cv::Mat frame = cv::imread("../assets/tray_landscape.jpg");
   cv::Mat output_frame = frame.clone();
 
   int l_h = 155, l_s = 99, l_v = 0;
