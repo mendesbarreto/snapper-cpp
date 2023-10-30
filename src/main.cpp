@@ -1,81 +1,58 @@
 #include <iostream>
+#include <opencv2/core/mat.hpp>
 #include <opencv2/core/types.hpp>
+#include <opencv2/highgui.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/opencv.hpp>
+#include <ostream>
 
-int main_old() {
-  std::cout << "Let's Start Snapper Example" << std::endl;
-  std::cout << "Loading example" << std::endl;
-  cv::Mat image = cv::imread("../assets/rick.jpg", cv::IMREAD_COLOR);
+cv::Mat crop(cv::Mat sourceImage, double offsetWidth, double offsetHeight,
+             int width, int height) {
 
-  if (image.empty()) {
-    std::cerr << "The Rick image failed to load" << std::endl;
-    return 1;
+  /* std::cout << "Starting Crop Image"; */
+  cv::Mat inputImage = sourceImage.clone();
+
+  if (offsetWidth < 0) {
+    offsetWidth = sourceImage.cols / 2.0;
   }
 
-  cv::Point text_position(80, 80);
-  int font_size = 1;
-  cv::Scalar font_Color(0, 0, 0);
+  if (offsetHeight < 0) {
+    offsetHeight = sourceImage.rows / 2.0;
+  }
 
-  int font_weight = 2;
-  putText(image, "This is RICK!", text_position, cv::FONT_HERSHEY_COMPLEX,
-          font_size, font_Color,
-          font_weight); // Putting the text in the matrix//
+  int x = offsetWidth;
+  int y = offsetHeight;
 
-  // Show our image
-  cv::imshow("Rick", image);
-  cv::waitKey(0);
+  /* std::cout << "Cropping image x: " << x << " y: " << y << " w: " << width */
+  /*           << " h: " << height << std::endl; */
+  /* std::cout << "Image w: " << sourceImage.cols / 2.0 << std::endl; */
 
-  return 0;
+  cv::Mat outputImage = inputImage(cv::Rect(x, y, width, height));
+
+  return outputImage;
 }
 
 int main() {
-  cv::VideoCapture cap(0);
+  cv::Mat frame = cv::imread("../assets/tray_portrait.jpg");
+  cv::Mat outputFrame;
+  int64 start = cv::getTickCount();
 
-  cv::Mat frame = cv::imread("../assets/tray_landscape.jpg");
-  cv::Mat output_frame = frame.clone();
+  int imagesToCrop = 100000;
 
-  int l_h = 155, l_s = 99, l_v = 0;
-  int u_h = 179, u_s = 255, u_v = 255;
-
-  while (true) {
-    cv::Mat frame_bgr, frame_hsv;
-    cv::cvtColor(frame, frame_bgr, cv::COLOR_BGR2GRAY);
-    cv::cvtColor(frame, frame_hsv, cv::COLOR_BGR2HSV);
-
-    cv::medianBlur(frame_hsv, frame_hsv, 3);
-
-    cv::Scalar lower_red(l_h, l_s, l_v);
-    cv::Scalar upper_red(u_h, u_s, u_v);
-
-    cv::Mat mask0;
-    cv::inRange(frame_hsv, lower_red, upper_red, mask0);
-
-    cv::Mat result;
-    cv::bitwise_and(output_frame, output_frame, result, mask0);
-
-    std::vector<std::vector<cv::Point>> contours;
-    std::vector<cv::Vec4i> hierarchy;
-    cv::findContours(mask0, contours, hierarchy, cv::RETR_TREE,
-                     cv::CHAIN_APPROX_SIMPLE);
-
-    for (size_t i = 1; i < contours.size(); ++i) {
-      std::vector<cv::Point> approx;
-      cv::approxPolyDP(contours[i], approx,
-                       0.01 * cv::arcLength(contours[i], true), true);
-      cv::drawContours(output_frame, contours, static_cast<int>(i),
-                       cv::Scalar(0, 0, 255), 5);
-    }
-
-    cv::imshow("output", output_frame);
-    cv::imshow("frame", result);
-
-    if (cv::waitKey(1) == 'q') {
-      break;
-    }
+  for (int i = 0; i < imagesToCrop; i++) {
+    outputFrame = crop(frame, 300, 300, 2420, 3650);
   }
+
+  int64 delta = cv::getTickCount() - start;
+  double freq = cv::getTickFrequency();
+  double elapsed = delta / freq;
+  std::cout << "Took " << elapsed << " seconds."
+            << "to crop " << imagesToCrop << " images" << std::endl;
+
+  cv::imshow("Crop", outputFrame);
+  cv::waitKey(0);
 
   return 0;
 }
