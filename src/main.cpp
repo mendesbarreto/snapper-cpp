@@ -37,9 +37,10 @@ cv::Mat crop(cv::Mat sourceImage, double offsetWidth, double offsetHeight,
 int main() {
   cv::Mat frame = cv::imread("../assets/tray_portrait.jpg");
   cv::Mat outputFrame;
+
   int64 start = cv::getTickCount();
 
-  int imagesToCrop = 100000;
+  int imagesToCrop = 100;
 
   for (int i = 0; i < imagesToCrop; i++) {
     outputFrame = crop(frame, 300, 300, 2420, 3650);

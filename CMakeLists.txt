@@ -1,15 +1,20 @@
 cmake_minimum_required(VERSION 3.10)
+option(LATEST_OPEN_CV "If this option is true it will select the latest opencv to test your project" OFF)
 
 project(snapper-cpp)
 
-# Set the path to the OpenCV directory
-#set(OpenCV_DIR "${CMAKE_SOURCE_DIR}/thirdparty/opencv-3.4.14")
-#set(LDFLAGS "-L/opt/homebrew/opt/opencv@3/lib")
-#set(CPPFLAGS "-I/opt/homebrew/opt/opencv@3/include")
-#set(OpenCV_DIR "/opt/homebrew/opt/opencv@3")
-#set(OpenCV_INCLUDE_DIRS "/opt/homebrew/opt/opencv@3/include")
+if(LATEST_OPEN_CV)
+  #Include latest version of open-cv
+  find_package(OpenCV REQUIRED)
+else()
+  set(LDFLAGS "-L/opt/homebrew/opt/opencv@3/lib")
+  set(CPPFLAGS "-I/opt/homebrew/opt/opencv@3/include")
+  set(OpenCV_DIR "/opt/homebrew/opt/opencv@3")
+  set(OpenCV_INCLUDE_DIRS "/opt/homebrew/opt/opencv@3/include")
+  find_package(OpenCV 3.4 REQUIRED PATHS "${OpenCV_DIR}")
+endif()
 
-find_package(OpenCV REQUIRED)
+
 #find_package(OpenCV REQUIRED)
 
 # Gather your source files
