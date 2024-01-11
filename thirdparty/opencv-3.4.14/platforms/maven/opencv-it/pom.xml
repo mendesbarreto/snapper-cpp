@@ -61,7 +61,7 @@
         <dependency>
             <artifactId>org.apache.karaf.log.core</artifactId>
             <groupId>org.apache.karaf.log</groupId>
-            <version>4.0.6</version>
+            <version>4.4.5</version>
             <scope>test</scope>
         </dependency>
         <dependency>
